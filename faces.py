@@ -26,6 +26,11 @@ while True:
         if conf>=45 and conf<=85:
             print(id_)
             print(labels[id_])
+            font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
+            name = labels[id_]
+            color = (0, 0, 255)
+            stroke = 2
+            cv2.putText(frame, name, (x,y), font, 1, color, stroke, cv2.LINE_AA)
 
         img_item = "my-image.png"
         cv2.imwrite(img_item, roi_gray)
