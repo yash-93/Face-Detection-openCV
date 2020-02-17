@@ -3,6 +3,9 @@ import numpy as np
 import pickle
 
 face_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt2.xml')
+eye_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_eye.xml')
+smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
+
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("trainner.yml")
 
@@ -33,12 +36,19 @@ while True:
             cv2.putText(frame, name, (x,y), font, 1, color, stroke, cv2.LINE_AA)
 
         img_item = "my-image.png"
-        cv2.imwrite(img_item, roi_gray)
+        # cv2.imwrite(img_item, roi_gray)
         color = (0, 255, 0)
         stroke = 2
         end_cord_x = x + w
         end_cord_y = y + h
         cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
+        eyes = eye_cascade.detectMultiScale(roi_gray)
+        for (ex,ey,ew,eh) in eyes:
+            cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (255, 0, 0), stroke)
+
+        smile = smile_cascade.detectMultiScale(roi_gray)
+        for (sx, sy, sw, sh) in smile:
+            cv2.rectangle(roi_color, (sx, sy), (sx + sw, sy + sh), (255, 255, 0), stroke)
 
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
